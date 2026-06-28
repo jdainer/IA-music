@@ -389,8 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================
     // ESTADO DEL CHAT
     // ============================================
-    let userName = null;
-    let waitingForName = true;
+    
     let conversationStage = 'welcome';
 
     // ============================================
@@ -535,12 +534,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // FUNCIÓN DEL CREADOR (¡AHORA ESTÁ BIEN DEFINIDA!)
     // ============================================
     function mostrarInfoCreador() {
-        // Primero verificamos si el usuario ya dio su nombre
-        if (waitingForName) {
-            addMessage("👋 ¡Primero dime tu nombre para empezar!", false);
-            return;
-        }
 
+        
+        // Primero verificamos si el usuario ya dio su nombre
+        
         // Agregar el mensaje del usuario
         addMessage("👨‍💻 ¿Quién te creó?", true);
         
@@ -566,10 +563,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const welcomeMsg = `
             ¡Hola! Soy tu <strong>Asistente Musical</strong>
             <br>
-            <strong>¿Cuál es tu nombre?</strong>
-            <br>
             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-            🗒️ Escribe tu nombre y organicemos una lista de canciones.
+            🗒️organicemos una lista de canciones.
             </span>
         `;
         addMessage(welcomeMsg, false);
@@ -581,20 +576,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const msg = `
             ✨ ¡DIOS te bendiga, <strong style="color: #fcd34d;">${escapeHtml(name)}</strong>! ✨
             <br>
-            "Recuerda Bendecir al Señor en todo tiempo; y que su alabanza esté de continuo en tu boca." 🎵
+            "Recuerda Bendecir al Señor en todo tiempo."
             <br>
-            <strong>Ahora puedes:</strong>
+            SUBE EL VOLUMEN al tocar un tono va a sonar
             <br>
-            🎹 <strong>Seleccionar un tono</strong> de los botones de abajo
-            <br>
-            🔍 <strong>Buscar una canción</strong> por su nombre
-            <br>
-            📝 <strong>Escribir</strong> un tono (ej: "do mayor")
-            <br>
-            📝 <strong>como incluir listas</strong>
-            <br>
+            <strong>usa :</strong>los botones de abajo o escribe la cancion que buscas yo te digo el tono y te doy una lista si esta disponible
             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-            DIOS BENDIGA TU MINISTERIO, ${escapeHtml(name)}!
+          
             </span>
         `;
         addMessage(msg, false);
@@ -698,8 +686,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 addMessage(message, false);
             } else {
                 const errorMsg = userName 
-                    ? `❌ No encontré ninguna canción que contenga "<em>${escapeHtml(searchTerm)}</em>", <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>.`
-                    : `❌ No encontré ninguna canción que contenga "<em>${escapeHtml(searchTerm)}</em>".`;
+                    ? `🥹no esta en el sistema "<em>${escapeHtml(searchTerm)}</em>", <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>.`
+                    : `🥹 no esta en el sistema  "<em>${escapeHtml(searchTerm)}</em>".`;
                 addMessage(errorMsg, false);
             }
         }, 600);
