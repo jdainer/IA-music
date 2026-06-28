@@ -52,6 +52,18 @@
         align-items: center;
         padding: 20px;
     }
+    .quick-buttons button.creador-btn {
+    background: linear-gradient(135deg, #fcd34d, #f59e0b);
+    border-color: #f59e0b;
+    color: #1a1a2e;
+    font-weight: 700;
+}
+
+.quick-buttons button.creador-btn:hover {
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
     .chat-container {
         max-width: 500px;
         width: 100%;
@@ -355,15 +367,17 @@
             <button class="menor" data-tone="sol menor">🎵 Sol Menor</button>
             <button class="menor" data-tone="la menor">🎵 La Menor</button>
             <button class="menor" data-tone="si menor">🎵 Si Menor</button>
-        </div>
+            <button class="creador-btn" onclick="preguntarCreador()">como incluir nuevas listas </button>
+          </div>
+    
 
         <div class="chat-footer">
             <i class="fas fa-music"></i> Creado por Jhon Dainer Arias · Cel 3138094678
         </div>
     </div>
 </div>
-
 <script>
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🎵 Organizador Musical cargado - 2026");
 
@@ -375,15 +389,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================
     // ESTADO DEL CHAT
     // ============================================
-    let userName = null; // Nombre del usuario
-    let waitingForName = true; // Esperando que el usuario diga su nombre
-    let conversationStage = 'welcome'; // welcome | asking_name | chatting
+    let userName = null;
+    let waitingForName = true;
+    let conversationStage = 'welcome';
 
     // ============================================
     // REPRODUCTOR DE AUDIO
     // ============================================
     const audioPlayer = new Audio();
 
+    // ============================================
+    // BASE DE DATOS DE CANCIONES
+    // ============================================
     const songsByTone = {
         "do mayor": [
             "El Espíritu de Dios se mueve", "En ese nombre", "La sangre de Cristo",
@@ -406,9 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "Jehová está en su templo", "Vamos por montes", "Soy feliz",
             "El es el gran yo soy", "Una vez andaba yo"
         ],
-        "fa mayor": [
-            "NO HAY CANCIONES EN ESTE TONO"
-        ],
+        "fa mayor": ["NO HAY CANCIONES EN ESTE TONO"],
         "sol mayor": [
             "Es un canto de", "La fuente", "Mirad cuán bueno",
             "Si mi pueblo se humilla", "Si quito la mirada", "Viva el evangelio",
@@ -420,9 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "Yo vengo a tu presencia", "Gracias Señor", "Quién como tú",
             "Damos gracias al Señor", "Yo vivo porque Cristo", "Oh qué alegría"
         ],
-        "si mayor": [
-           "NO HAY CANCIONES EN ESTE TONO"
-        ],
+        "si mayor": ["NO HAY CANCIONES EN ESTE TONO"],
         "do menor": [
             "Este avivamiento", "Esta alabanza es", "Qué bonito es",
             "Yo he creído", "Te espero", "Gocémonos"
@@ -519,19 +532,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================
-    // MENSAJES DE BIENVENIDA PERSONALIZADOS
+    // FUNCIÓN DEL CREADOR (¡AHORA ESTÁ BIEN DEFINIDA!)
+    // ============================================
+    function mostrarInfoCreador() {
+        // Primero verificamos si el usuario ya dio su nombre
+        if (waitingForName) {
+            addMessage("👋 ¡Primero dime tu nombre para empezar!", false);
+            return;
+        }
+
+        // Agregar el mensaje del usuario
+        addMessage("👨‍💻 ¿Quién te creó?", true);
+        
+        // Mostrar la respuesta del bot con el nombre del usuario
+        const msg = `
+              ¡Excelente pregunta, <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>!
+                <br>
+                Fui creado por <strong style="color: #fcd34d;">JHON DAINER ARIAS</strong>, un apasionado por la tecnología y la música.
+                <br>
+                si tienes listados de canciones que quieras que aparescan incluidas 
+                📞 Puedes contactarlo al: <strong> 313 8094678</strong>
+                <br>
+                📧 Email: <strong>jhondainerarias@gmail.com</strong>
+        `;
+        addMessage(msg, false);
+    }
+
+    // ============================================
+    // MENSAJES DE BIENVENIDA
     // ============================================
     
     function showWelcomeMessage() {
-        // Mensaje de bienvenida con el nombre del creador
         const welcomeMsg = `
-            🎵🎶 ¡Hola! Soy tu <strong>Asistente Musical</strong> 🎼
-            <br><br>
-            <br><br>
-            👋 <strong>¿Cuál es tu nombre?</strong>
-            <br><br>
+            ¡Hola! Soy tu <strong>Asistente Musical</strong>
+            <br>
+            <strong>¿Cuál es tu nombre?</strong>
+            <br>
             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-                💡 Escribe tu nombre y organicemos una lista de canciones.
+            🗒️ Escribe tu nombre y organicemos una lista de canciones.
             </span>
         `;
         addMessage(welcomeMsg, false);
@@ -542,19 +580,21 @@ document.addEventListener("DOMContentLoaded", () => {
     function showPersonalizedWelcome(name) {
         const msg = `
             ✨ ¡DIOS te bendiga, <strong style="color: #fcd34d;">${escapeHtml(name)}</strong>! ✨
-            <br><br>
-            "recuerda Bendecir al Señor en todo tiempo; y que su alabanza este de continuo en tu boca.". 🎵
-            <br><br>
-            <strong>¿Qué deseas hacer?</strong>
             <br>
-            🎹 <strong>Selecciona un tono</strong> de los botones de abajo
+            "Recuerda Bendecir al Señor en todo tiempo; y que su alabanza esté de continuo en tu boca." 🎵
             <br>
-            🔍 <strong>Busca una canción</strong> por su nombre
+            <strong>Ahora puedes:</strong>
             <br>
-            📝 <strong>Escribe</strong> el nombre de un tono (ej: "do mayor")
-            <br><br>
+            🎹 <strong>Seleccionar un tono</strong> de los botones de abajo
+            <br>
+            🔍 <strong>Buscar una canción</strong> por su nombre
+            <br>
+            📝 <strong>Escribir</strong> un tono (ej: "do mayor")
+            <br>
+            📝 <strong>como incluir listas</strong>
+            <br>
             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-                 DIOS BENDIGA TU MINISTERIO, ${escapeHtml(name)}!
+            DIOS BENDIGA TU MINISTERIO, ${escapeHtml(name)}!
             </span>
         `;
         addMessage(msg, false);
@@ -562,7 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================
-    // MOSTRAR CANCIONES CON REPRODUCCIÓN DE AUDIO
+    // MOSTRAR CANCIONES POR TONO
     // ============================================
     function showSongsByTone(tone) {
         showTypingIndicator();
@@ -598,13 +638,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.warn("Error al reproducir audio:", error);
                 }
                 
-                // Mensaje personalizado con el nombre del usuario
-                let personalizedMsg = `🎶 <strong>${normalizedTone}</strong> - ${songCount} canciones`;
+                let personalizedMsg = `🎶 <strong>${normalizedTone}</strong> - ${songCount} canciones encontradas`;
                 
                 if (userName) {
-                    personalizedMsg = `🎵 ¡ok, <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>! 🎵<br><br>🎶 Mostrando <strong>${songCount}</strong> canciones en <strong>${normalizedTone}</strong> <span class="song-count">${songCount} canciones</span>`;
-                } else {
-                    personalizedMsg = `🎶 Mostrando canciones en <strong>${normalizedTone}</strong> <span class="song-count">${songCount} canciones</span>`;
+                    personalizedMsg = `🎵 ¡Perfecto, <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>! Aquí tienes <strong>${songCount}</strong> canciones en <strong>${normalizedTone}</strong> <span class="song-count">🎵</span>`;
                 }
                 
                 addMessage(personalizedMsg, false, true, normalizedTone);
@@ -658,11 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     message += '<br>';
                 }
 
-                if (results.length === 1) {
-                    const result = results[0];
-                    message += `<br>💡 Haz clic en el tono <strong>${result.tono}</strong> recuerda que puede variar dependiendo de tu registro vocal.`;
-                }
-
                 addMessage(message, false);
             } else {
                 const errorMsg = userName 
@@ -688,10 +720,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // SI ESTAMOS ESPERANDO EL NOMBRE
         // ============================================
         if (waitingForName) {
-            // Guardar el nombre del usuario (primer palabra como nombre)
             const nameParts = trimmed.split(' ');
-            userName = nameParts[0]; // Tomamos la primera palabra como nombre
-            // Capitalizar primera letra
+            userName = nameParts[0];
             userName = userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase();
             
             waitingForName = false;
@@ -711,22 +741,22 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Verificar si el usuario pregunta por el creador
+        // Verificar si el usuario pregunta por el creador (por texto)
         if (trimmed.toLowerCase().includes('creador') || 
             trimmed.toLowerCase().includes('jhon') || 
             trimmed.toLowerCase().includes('arias') ||
             trimmed.toLowerCase().includes('quien te creó') ||
             trimmed.toLowerCase().includes('quién te creó')) {
+            
             const msg = `
                 👨‍💻 ¡Excelente pregunta, <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>!
-                <br><br>
+                <br>
                 Fui creado por <strong style="color: #fcd34d;">JHON DAINER ARIAS</strong>, un apasionado por la tecnología y la música.
                 <br>
-                📞 Puedes contactarlo al: <strong>313 8094678</strong>
-                <br>
+                si tienes listados de canciones que quieras que aparescan incluidas 
+                📞 Puedes contactarlo al: <strong> 313 8094678</strong>
                 📧 Email: <strong>jhondainerarias@gmail.com</strong>
-                <br><br>
-                🎵 ¡Él diseñó este catálogo musical para ayudarte a organizar tus canciones favoritas!
+
             `;
             addMessage(msg, false);
             return;
@@ -745,7 +775,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Verificar si el usuario pregunta cómo está el bot
+        // Verificar cómo está el bot
         if (trimmed.toLowerCase().includes('cómo estás') || trimmed.toLowerCase().includes('como estas') || trimmed.toLowerCase().includes('que tal')) {
             const msg = `
                 😊 ¡Estoy genial, <strong style="color: #fcd34d;">${escapeHtml(userName)}</strong>!
@@ -790,15 +820,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // EVENT LISTENERS
     // ============================================
 
+    // Botones de tonos musicales
     toneButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Si el usuario aún no ha dado su nombre, mostrar mensaje
             if (waitingForName) {
                 addMessage("👋 ¡Primero dime tu nombre para empezar!", false);
                 return;
             }
+            
+            // Verificar si es el botón del creador
+            if (btn.classList.contains('creador-btn')) {
+                mostrarInfoCreador();
+                return;
+            }
+            
             const tone = btn.getAttribute('data-tone');
-            showSongsByTone(tone);
+            if (tone) {
+                showSongsByTone(tone);
+            }
         });
     });
 
@@ -817,8 +856,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================
     // INICIALIZAR CHAT
     // ============================================
-    
-    // Mostrar mensaje de bienvenida al cargar
     showWelcomeMessage();
 
     // ============================================
@@ -826,21 +863,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================
     function createParticles() {
         const container = document.getElementById('particles');
-        for (let i = 0; i < 60; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.width = `${Math.random() * 6 + 2}px`;
-            particle.style.height = particle.style.width;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.animationDuration = `${Math.random() * 15 + 8}s`;
-            particle.style.animationDelay = `${Math.random() * 5}s`;
-            container.appendChild(particle);
+        if (container) {
+            for (let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 6 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${Math.random() * 15 + 8}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(particle);
+            }
         }
     }
     createParticles();
 
     console.log('%c🎵 Organizador Musical Personalizado - Listo', 'color: #7c3aed; font-size: 14px; font-weight: bold;');
-    console.log(`%c👤 Esperando nombre del usuario...`, 'color: #fcd34d; font-size: 12px;');
 });
 </script>
 
